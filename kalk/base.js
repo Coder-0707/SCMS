@@ -1,3 +1,22 @@
+
+function generateMonthLabels(startMonth, startYear, totalPeriods) {
+    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    let labels = [];
+    let month = startMonth - 1;
+    let year = startYear;
+
+    for (let i = 0; i < totalPeriods; i++) {
+        labels.push(`${monthNames[month]} ${year}`);
+        month++;
+        if (month > 11) {
+            month = 0;
+            year++;
+        }
+    }
+    return labels;
+}
+
    // Initialize dynamic demand inputs
         document.addEventListener('DOMContentLoaded', function() {
             const periodsInput = document.getElementById('periods');
@@ -41,34 +60,38 @@
             document.getElementById('calculateBtn').addEventListener('click', calculateInventory);
         });
         
-        function updateDemandInputs() {
-            const periods = parseInt(document.getElementById('periods').value);
-            const demandInputs = document.getElementById('demandInputs');
-            
-            // Clear existing inputs
-            demandInputs.innerHTML = '';
-            
-            // Add new inputs
-            for (let i = 1; i <= periods; i++) {
-                const div = document.createElement('div');
-                div.className = 'flex items-center';
-                
-                const label = document.createElement('label');
-                label.className = 'w-24 text-gray-700';
-                label.textContent = `Periode ${i}:`;
-                
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.min = '0';
-                input.value = Math.floor(Math.random() * 100) + 20; // Random demand between 20-120
-                input.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500';
-                input.id = `demand${i}`;
-                
-                div.appendChild(label);
-                div.appendChild(input);
-                demandInputs.appendChild(div);
-            }
-        }
+        
+function updateDemandInputs() {
+    const periods = parseInt(document.getElementById('periods').value);
+    const startMonth = parseInt(document.getElementById('startMonth').value);
+    const startYear = parseInt(document.getElementById('startYear').value);
+    const demandInputs = document.getElementById('demandInputs');
+
+    demandInputs.innerHTML = '';
+
+    const labels = generateMonthLabels(startMonth, startYear, periods);
+    for (let i = 1; i <= periods; i++) {
+        const div = document.createElement('div');
+        div.className = 'flex items-center';
+
+        const label = document.createElement('label');
+        label.className = 'w-36 text-gray-700';
+        label.textContent = `${labels[i - 1]}:`;
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.value = Math.floor(Math.random() * 100) + 20;
+        input.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500';
+        input.id = `demand${i}`;
+
+        div.appendChild(label);
+        div.appendChild(input);
+        demandInputs.appendChild(div);
+    }
+}
+
+        
         
         function calculateInventory() {
             const periods = parseInt(document.getElementById('periods').value);
@@ -92,7 +115,7 @@
             // Compare results
             compareResults(wagnerResults, silverResults);
         }
-        // wagnerWithin method implementation
+        
         function wagnerWithin(demands, setupCost, holdingCost) {
             const n = demands.length;
             const totalCost = Array(n).fill(Infinity);
@@ -138,7 +161,7 @@
                 holdingCosts: calculateHoldingCosts(orderSchedule, demands, holdingCost)
             };
         }
-        // silverMeal method implementation
+        
         function silverMeal(demands, setupCost, holdingCost) {
             const n = demands.length;
             const orderSchedule = Array(n).fill(0);
@@ -196,30 +219,22 @@
             const n = demands.length;
             const holdingCosts = Array(n).fill(0);
             let inventory = 0;
-            let orderPeriod = -1;
-
+            
             for (let i = 0; i < n; i++) {
                 if (orderSchedule[i] > 0) {
                     inventory = orderSchedule[i];
-                    orderPeriod = i;
                 }
-
-                if (i > orderPeriod && orderPeriod !== -1) {
-                    const timeHeld = i - orderPeriod; // jumlah periode disimpan
-                    holdingCosts[i] = demands[i] * timeHeld * holdingCost;
+                
+                if (i > 0) {
+                    holdingCosts[i] = inventory * holdingCost;
                     inventory -= demands[i];
                 }
             }
-
+            
             return holdingCosts;
         }
         
         function displayWagnerResults(results, demands) {
-            const wagnerOrders = results.orderSchedule.filter(x => x > 0).length;
-            const wagnerOrderCost = wagnerOrders * parseFloat(document.getElementById('setupCost').value);
-            const wagnerHoldingCost = results.holdingCosts.reduce((a, b) => a + b, 0);
-
-
             const periods = demands.length;
             const rop = Array(demands.length + 1).fill(''); // +1 untuk periode 0
                 for (let i = 1; i <= demands.length; i++) {
@@ -265,13 +280,12 @@
                     </tr>
                 </tbody>
             `;
-            // opsional Skema pemesanan: ${results.orderSchedule.map((qty, i) => qty > 0 ? `Pesan ${qty} unit pada periode ${i+1}` : '').filter(x => x).join(', ')}.
+            
             // Display summary
             document.getElementById('wagnerSummary').innerHTML = `
-                Total biaya pemesanan: <span class="font-semibold">${wagnerOrderCost.toFixed(2)}</span>.<br>
-                Total biaya simpan: <span class="font-semibold">${wagnerHoldingCost.toFixed(2)}</span>.<br>
                 Total biaya persediaan dengan metode Wagner-Within adalah <span class="font-semibold">${results.totalCost.toFixed(2)}</span>.<br>
                 Jumlah pemesanan: <span class="font-semibold">${results.orderSchedule.filter(x => x > 0).length}</span> kali.<br>
+                Skema pemesanan: ${results.orderSchedule.map((qty, i) => qty > 0 ? `Pesan ${qty} unit pada periode ${i+1}` : '').filter(x => x).join(', ')}.
             `;
             
             // Update chart
@@ -279,10 +293,6 @@
         }
         
         function displaySilverResults(results, demands) {
-            const silverOrders = results.orderSchedule.filter(x => x > 0).length;
-            const silverOrderCost = silverOrders * parseFloat(document.getElementById('setupCost').value);
-            const silverHoldingCost = results.holdingCosts.reduce((a, b) => a + b, 0);
-
             const periods = demands.length;
              const rop = Array(demands.length + 1).fill(''); // +1 untuk periode 0
                 for (let i = 1; i <= demands.length; i++) {
@@ -328,13 +338,12 @@
                     </tr>
                 </tbody>
             `;
-            // opsional Skema pemesanan: ${results.orderSchedule.map((qty, i) => qty > 0 ? `Pesan ${qty} unit pada periode ${i+1}` : '').filter(x => x).join(', ')}.
+            
             // Display summary
             document.getElementById('silverSummary').innerHTML = `
-                Total biaya pemesanan: <span class="font-semibold">${silverOrderCost.toFixed(2)}</span>.<br>
-                Total biaya simpan: <span class="font-semibold">${silverHoldingCost.toFixed(2)}</span>.<br>
                 Total biaya persediaan dengan metode Silver-Meal adalah <span class="font-semibold">${results.totalCost.toFixed(2)}</span>.<br>
                 Jumlah pemesanan: <span class="font-semibold">${results.orderSchedule.filter(x => x > 0).length}</span> kali.<br>
+                Skema pemesanan: ${results.orderSchedule.map((qty, i) => qty > 0 ? `Pesan ${qty} unit pada periode ${i+1}` : '').filter(x => x).join(', ')}.
             `;
             
             // Update chart
