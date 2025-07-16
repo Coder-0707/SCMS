@@ -213,24 +213,39 @@
         
         function displayWagnerResults(results, demands) {
             const periods = demands.length;
-            
+            const rop = Array(demands.length + 1).fill(''); // +1 untuk periode 0
+                for (let i = 1; i <= demands.length; i++) {
+                    if (results.orderSchedule[i - 1] > 0) {
+                        rop[i - 1] = results.orderSchedule[i - 1];
+                    }
+                }
             // Display table
             const table = document.getElementById('wagnerTable');
             table.innerHTML = `
+            <tr class="border-b bg-blue-100">
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">-</td>
+                <td class="px-4 py-2">${rop[0]}</td>
+                <td class="px-4 py-2">-</td>
+                <td class="px-4 py-2">-</td>
+                <td class="px-4 py-2">-</td>
+            </tr>
                 <thead>
                     <tr class="bg-blue-50 text-blue-800">
                         <th class="px-4 py-2 text-left">Periode</th>
                         <th class="px-4 py-2 text-left">Permintaan</th>
+                        <th class="px-4 py-2 text-left">POR</th>
                         <th class="px-4 py-2 text-left">Pesanan</th>
                         <th class="px-4 py-2 text-left">Persediaan</th>
-                        <th class="px-4 py-2 text-left">Biaya Holding</th>
+                        <th class="px-4 py-2 text-left">Biaya Inventori</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${demands.map((demand, i) => `
+                   row +=${demands.map((demand, i) => `
                         <tr class="border-b border-gray-100 hover:bg-blue-50">
                             <td class="px-4 py-2">${i+1}</td>
                             <td class="px-4 py-2">${demand}</td>
+                            <td class="px-4 py-2">${rop[i + 1]}</td>
                             <td class="px-4 py-2">${results.orderSchedule[i] > 0 ? results.orderSchedule[i] : ''}</td>
                             <td class="px-4 py-2">${i === 0 ? results.orderSchedule[i] - demand : (results.orderSchedule[i] > 0 ? results.orderSchedule[i] - demand : '')}</td>
                             <td class="px-4 py-2">${results.holdingCosts[i] > 0 ? results.holdingCosts[i].toFixed(2) : ''}</td>
@@ -256,14 +271,28 @@
         
         function displaySilverResults(results, demands) {
             const periods = demands.length;
-            
+             const rop = Array(demands.length + 1).fill(''); // +1 untuk periode 0
+                for (let i = 1; i <= demands.length; i++) {
+                    if (results.orderSchedule[i - 1] > 0) {
+                        rop[i - 1] = results.orderSchedule[i - 1];
+                    }
+                }
             // Display table
             const table = document.getElementById('silverTable');
             table.innerHTML = `
+            <tr class="border-b bg-blue-100">
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">-</td>
+                <td class="px-4 py-2">${rop[0]}</td>
+                <td class="px-4 py-2">-</td>
+                <td class="px-4 py-2">-</td>
+                <td class="px-4 py-2">-</td>
+            </tr>
                 <thead>
                     <tr class="bg-green-50 text-green-800">
                         <th class="px-4 py-2 text-left">Periode</th>
                         <th class="px-4 py-2 text-left">Permintaan</th>
+                        <th class="px-4 py-2 text-left">POR</th>
                         <th class="px-4 py-2 text-left">Pesanan</th>
                         <th class="px-4 py-2 text-left">Persediaan</th>
                         <th class="px-4 py-2 text-left">Biaya Inventori</th>
@@ -274,6 +303,7 @@
                         <tr class="border-b border-gray-100 hover:bg-green-50">
                             <td class="px-4 py-2">${i+1}</td>
                             <td class="px-4 py-2">${demand}</td>
+                            <td class="px-4 py-2">${rop[i + 1]}</td>
                             <td class="px-4 py-2">${results.orderSchedule[i] > 0 ? results.orderSchedule[i] : ''}</td>
                             <td class="px-4 py-2">${i === 0 ? results.orderSchedule[i] - demand : (results.orderSchedule[i] > 0 ? results.orderSchedule[i] - demand : '')}</td>
                             <td class="px-4 py-2">${results.holdingCosts[i] > 0 ? results.holdingCosts[i].toFixed(2) : ''}</td>

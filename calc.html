@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta favicon="/Logo.svg" type="image/svg+xml">
+    <link rel="icon" href="/Logo.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="/Logo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/Logo.svg " type="image/svg+xml">
+    <link rel="apple-touch-icon-precomposed" href="/Logo.svg" type="image/svg+xml">
     <title>Kalkulator Kebutuhan Bahan Tekstil</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -18,7 +23,7 @@
         }
         .result-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(220, 51, 51, 0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         body {
             font-family: 'Poppins', sans-serif;
@@ -72,54 +77,46 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
     <header class="text-center mb-12">
-        <nav class="mb-6">
-        <ul class="flex justify-center space-x-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div class="result-card bg-blue-50 p-4 rounded-lg border border-blue-100">
-            <li>
-            <a href="index.html"
-               class="text-blue-600 transition-transform duration-200 ease-in-out"
-               onclick="animateClick(this)">
-               Kalkulasi
-            </a>
-            </li>
+        <div class="container" style="margin-bottom: 24px;">
+            <nav class="mb-6">
+            <div class="flex justify-center space-x-4">
+                <div class="result-card bg-blue-100 p-4 rounded-lg border border-blue-300 flex items-center justify-center" style="min-width: 160px;">
+                    <a href="index.html"
+                       class="text-blue-700 font-semibold text-center w-full block"
+                       style="text-decoration: none;">
+                       Kalkulasi
+                    </a>
+                </div>
+                <div class="result-card bg-green-100 p-4 rounded-lg border border-green-300 flex items-center justify-center" style="min-width: 160px;">
+                    <a href="https://www.appsheet.com/start/bd7d0c68-d130-4d85-b112-597b928f16e5"
+                       class="text-green-700 font-semibold text-center w-full block"
+                       style="text-decoration: none;">
+                       Aplikasi Appsheet
+                    </a>
+                </div>
+                <div class="result-card bg-yellow-100 p-4 rounded-lg border border-yellow-300 flex items-center justify-center" style="min-width: 160px;">
+                    <a href="calc.html"
+                       class="text-yellow-700 font-semibold text-center w-full block"
+                       style="text-decoration: none;">
+                       Konversi produk
+                    </a>
+                </div>
             </div>
-            <div class="result-card bg-green-50 p-4 rounded-lg border border-green-100">
-            <li>
-                <a href="https://www.appsheet.com/start/bd7d0c68-d130-4d85-b112-597b928f16e5"
-               class="text-blue-600 transition-transform duration-200 ease-in-out"
-               onclick="animateClick(this)">
-               Aplikasi Appsheet
-                </a>
-             </li>
-            </div>
-             <div class="result-card bg-blue-50 p-4 rounded-lg border border-blue-100">
-            <li>
-            <a href="calc.html"
-               class="text-blue-600  transition-transform duration-200 ease-in-out"
-               onclick="animateClick(this)">
-               Konversi produk
-            </a>
-            </li>
-            </div>
-        </div>
-        </ul>
-        </nav>
+            </nav>
             <h1 class="text-3xl md:text-4xl font-bold text-blue-600 mb-4">Konversi produk</h1>
+        </div>
     <div class="container">
         <label for="productType">Pilih Jenis Produk:</label>
         <select id="productType">
-            <option value="handuk">Handuk</option>
-            <option value="napkin">Napkin</option>
-            <option value="bedCover">Bed Cover</option>
-            <option value="kitchenTowel">Kitchen Towel</option>
+            <option value="handuk">Bed Cover</option>
+            <option value="napkin">Kitchen Towel</option>
         </select>
         <button id="addProductBtn" onclick="showProductSettings()" style="margin-bottom:15px;">+ Tambah Produk Baru</button>
         <div id="productSettings" style="display:none; margin-bottom:15px;">
             <label for="newProductName">Nama Produk Baru:</label>
             <input type="text" id="newProductName" placeholder="Masukkan nama produk">
             <label for="newRollLength">Panjang Roll (meter):</label>
-            <input type="number" id="newRollLength" placeholder="Masukkan panjang roll">
+            <input type="number" id="newRollLength" placeholder="Masukkan panjang roll" value="4500">
             <button onclick="addNewProduct()">Simpan Produk</button>
         </div>
 
@@ -144,10 +141,8 @@
 
     <script>
         let productSettings = {
-            'handuk': 50,
-            'napkin': 30,
-            'bedCover': 70,
-            'kitchenTowel': 40
+            'handuk': 900,
+            'napkin': 900,
         };
 
         function showProductSettings() {
@@ -156,7 +151,10 @@
 
         function addNewProduct() {
             const productName = document.getElementById('newProductName').value;
-            const rollLength = parseInt(document.getElementById('newRollLength').value);
+            let rollLength = parseInt(document.getElementById('newRollLength').value);
+            if (isNaN(rollLength) || rollLength <= 0) {
+                rollLength = 900;
+            }
 
             if (!productName || isNaN(rollLength) || rollLength <= 0) {
                 alert('Masukkan nama dan panjang roll yang valid');
@@ -194,7 +192,7 @@
             const totalAreaCm2 = productCount * productLength * productWidth;
 
             // Konversi luas ke m²
-            const totalAreaM2 = totalAreaCm2 / 10000; // 1 m² = 10,000 cm²
+            const totalAreaM2 = totalAreaCm2 / 100; // 1 m² = 10,000 cm²
 
             // Get roll length from settings
             const rollLength = productSettings[productType] || 0;
@@ -203,17 +201,16 @@
                 return;
             }
 
-            // Hitung jumlah roll kain
-            const rollWidth = 150; // lebar roll dalam cm
-            const totalRolls = Math.ceil(totalAreaM2 / (rollLength * rollWidth / 10000)); // konversi rollLength ke m²
+            // Hitung jumlah roll benang yang dibutuhkan
+            const rollWidth = 200; // lebar roll dalam cm
+            const totalRolls = Math.ceil(totalAreaM2 / (rollLength * rollWidth / 100)); // konversi rollLength ke m²
 
-            // Hitung total meter kain yang dibutuhkan
-            const totalMeters = (totalAreaM2 / (rollWidth / 100)).toFixed(2); // konversi lebar roll ke m
+            // Hitung total meter benang yang dibutuhkan
+            const totalMeters = (totalAreaM2 / (rollWidth / 1000)).toFixed(2); // konversi lebar roll ke m
 
             // Tampilkan hasil
-            document.getElementById('totalArea').textContent = `Luas Total Bahan: ${totalAreaM2.toFixed(2)} m²`;
-            document.getElementById('totalMeters').textContent = `Total Kain yang Dibutuhkan: ${totalMeters} meter`;
-            document.getElementById('totalRolls').textContent = `Jumlah Roll Kain: ${totalRolls} roll`;
+            document.getElementById('totalArea').textContent = `Luas Total Bahan: ${totalAreaM2.toFixed(2)} cm²`;
+            document.getElementById('totalRolls').textContent = `Jumlah Roll benang: ${totalRolls} roll`;
             document.getElementById('result').style.display = 'block';
         }
     </script>
