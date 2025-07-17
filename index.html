@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon-precomposed" href="/Logo.svg" type="image/svg+xml">
     <title>Sistem Pengelolaan Inventori</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -136,7 +137,12 @@
                     <div class="mb-4">
                         <p class="text-gray-600">Metode Wagner-Within menggunakan pendekatan program dinamis untuk menemukan solusi pemesanan optimal yang meminimalkan total biaya persediaan.</p>
                     </div>
-                    
+                    <!-- Wagner -->
+                    <div class="mt-4">
+                    <button onclick="downloadTableAsExcel('wagnerTable', 'wagner-within.xlsx')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Download Wagner-Within (Excel)
+                    </button>
+                    </div>
                     <div class="overflow-x-auto">
                         <table id="wagnerTable" class="w-full border-collapse">
                             <!-- Table content will be generated dynamically -->
@@ -146,7 +152,11 @@
                     <div class="mt-6">
                         <canvas id="wagnerChart"></canvas>
                     </div>
-
+                    <div class="mt-4">
+                    <button onclick="downloadChartAsImage('wagnerChart', 'grafik-wagner.png')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Grafik-WW
+                    </button>
+                    </div>
                     <div class="mt-6 bg-blue-50 p-4 rounded-lg">
                         <h3 class="font-semibold text-blue-800 mb-2">Ringkasan Wagner-Within</h3>
                         <p id="wagnerSummary" class="text-gray-700">Isi akan muncul setelah perhitungan.</p>
@@ -159,7 +169,12 @@
                     <div class="mb-4">
                         <p class="text-gray-600">Metode Silver-Meal mencoba meminimalkan biaya rata-rata per periode dengan memperpanjang waktu pemesanan sampai biaya rata-rata mulai naik.</p>
                     </div>
-                    
+                    <!-- Silver -->
+                    <div class="mt-4">
+                    <button onclick="downloadTableAsExcel('silverTable', 'silver-meal.xlsx')" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                        Download Silver-Meal (Excel)
+                    </button>
+                    </div>
                     <div class="overflow-x-auto">
                         <table id="silverTable" class="w-full border-collapse">
                             <!-- Table content will be generated dynamically -->
@@ -169,7 +184,11 @@
                     <div class="mt-6">
                         <canvas id="silverChart"></canvas>
                     </div>
-
+                    <div class="mt-4">
+                    <button onclick="downloadChartAsImage('silverChart', 'grafik-silver.png')" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                        Grafik SM
+                    </button>
+                    </div>
                     <div class="mt-6 bg-green-50 p-4 rounded-lg">
                         <h3 class="font-semibold text-green-800 mb-2">Ringkasan Silver-Meal</h3>
                         <p id="silverSummary" class="text-gray-700">Isi akan muncul setelah perhitungan.</p>

@@ -230,14 +230,7 @@
             // Display table
             const table = document.getElementById('wagnerTable');
             table.innerHTML = `
-            <tr class="border-b bg-blue-100">
-                <td class="px-4 py-2">0</td>
-                <td class="px-4 py-2">-</td>
-                <td class="px-4 py-2">${rop[0]}</td>
-                <td class="px-4 py-2">-</td>
-                <td class="px-4 py-2">-</td>
-                <td class="px-4 py-2">-</td>
-            </tr>
+            
                 <thead>
                     <tr class="bg-blue-50 text-blue-800">
                         <th class="px-4 py-2 text-left">Periode</th>
@@ -248,6 +241,14 @@
                         <th class="px-4 py-2 text-left">Biaya Inventori</th>
                     </tr>
                 </thead>
+                <tr class="border-b bg-blue-100">
+                    <td class="px-4 py-2">0</td>
+                    <td class="px-4 py-2">-</td>
+                    <td class="px-4 py-2">${rop[0]}</td>
+                    <td class="px-4 py-2">-</td>
+                    <td class="px-4 py-2">-</td>
+                    <td class="px-4 py-2">-</td>
+                </tr>
                 <tbody>
                    row +=${demands.map((demand, i) => `
                         <tr class="border-b border-gray-100 hover:bg-blue-50">
@@ -293,14 +294,7 @@
             // Display table
             const table = document.getElementById('silverTable');
             table.innerHTML = `
-            <tr class="border-b bg-blue-100">
-                <td class="px-4 py-2">0</td>
-                <td class="px-4 py-2">-</td>
-                <td class="px-4 py-2">${rop[0]}</td>
-                <td class="px-4 py-2">-</td>
-                <td class="px-4 py-2">-</td>
-                <td class="px-4 py-2">-</td>
-            </tr>
+            
                 <thead>
                     <tr class="bg-green-50 text-green-800">
                         <th class="px-4 py-2 text-left">Periode</th>
@@ -312,6 +306,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr class="border-b bg-blue-100">
+                    <td class="px-4 py-2">0</td>
+                    <td class="px-4 py-2">-</td>
+                    <td class="px-4 py-2">${rop[0]}</td>
+                    <td class="px-4 py-2">-</td>
+                    <td class="px-4 py-2">-</td>
+                    <td class="px-4 py-2">-</td>
+                </tr>
                     ${demands.map((demand, i) => `
                         <tr class="border-b border-gray-100 hover:bg-green-50">
                             <td class="px-4 py-2">${i+1}</td>
@@ -529,4 +531,18 @@
                     }
                 }
             });
+        }
+        function downloadTableAsExcel(tableId, filename) {
+            const table = document.getElementById(tableId);
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.table_to_sheet(table);
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            XLSX.writeFile(wb, filename);
+        }
+        function downloadChartAsImage(canvasId, filename) {
+                const canvas = document.getElementById(canvasId);
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = filename;
+                link.click();
         }
